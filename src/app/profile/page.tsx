@@ -138,9 +138,8 @@ export default function ProfilePage() {
                     id="email"
                     name="email"
                     value={user.email}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    className={`mt-1 block w-full px-3 py-2 border ${isEditing ? 'border-gray-300' : 'border-gray-200 bg-gray-50'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+                    disabled
+                    className={`mt-1 block w-full px-3 py-2 border border-gray-200 bg-gray-50 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                   />
                 </div>
                 

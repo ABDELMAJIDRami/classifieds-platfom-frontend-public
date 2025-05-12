@@ -88,22 +88,22 @@ export default function Home() {
                 const currentVersion = getCurrentAdVersionFor(ad);
                 return (
                   <li key={ad.id} className="hover:bg-gray-50">
-                    <Link href='' className="block">
+                    <div className="block">
                     {/*<Link href={`/ads/${ad.id}`} className="block">*/}
                       <div className="px-4 py-4 sm:px-6">
-                        <div className="flex items-center justify-between">
+                        <div className="block md:flex items-center justify-between">
                           <div className="flex-1 min-w-0">
                             <h3 className="text-lg font-medium text-blue-600 truncate">{currentVersion.title}</h3>
-                            <div className="mt-1 flex items-center">
+                            <div className="mt-1 md:flex items-center">
                               <span className="flex-shrink-0 text-gray-500 truncate mr-1">
                                 {ad.city?.name}, {ad.city?.country?.name}
                               </span>
-                              <span className="text-sm text-gray-500">
-                                • Posted on {formatDate(ad.createdAt)}
+                              <span className="block text-sm text-gray-500">
+                                <span className="hidden md:inline">• </span>Posted on {formatDate(ad.createdAt)}
                               </span>
                             </div>
                           </div>
-                          <div className="text-right">
+                          <div className="md:text-right pt-4 md:pt-0">
                             <span className="text-lg font-medium text-green-600">${currentVersion.price}</span>
                             <p className="mt-1 text-sm text-gray-500">
                               Category: {ad.category?.name}
@@ -115,7 +115,7 @@ export default function Home() {
                           {currentVersion.description}
                         </div>
                       </div>
-                    </Link>
+                    </div>
                   </li>
                 );
               })}
