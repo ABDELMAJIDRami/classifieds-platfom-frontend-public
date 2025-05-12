@@ -1,8 +1,7 @@
 'use client';
-import {useState, useEffect, useContext, use} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import { useRouter } from 'next/navigation';
 import {UserContext} from "@/core/contexts/UserContext";
-import {User} from "@/core/interfaces/User";
 import axios from "@/core/network/axios";
 
 

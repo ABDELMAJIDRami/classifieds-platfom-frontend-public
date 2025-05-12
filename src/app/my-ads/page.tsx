@@ -1,20 +1,28 @@
 'use client';
-import {useState, useEffect, useContext, use} from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import {useState, useEffect, useContext, Suspense} from 'react';
+import {useRouter, useSearchParams} from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import {UserContext} from "@/core/contexts/UserContext";
 import axios from "@/core/network/axios";
 import {Ad} from "@/core/interfaces/Ad";
 import {getCurrentAdVersionFor} from "@/core/helpers";
 
+function LoadingSpinner() {
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    </div>
+  );
+}
 
-export default function MyAdsPage() {
+function MyAdsPageContent() {
   const {user, isFetchingUser} = useContext(UserContext);
   const router = useRouter();
   const searchParams = useSearchParams();
   const successParam = searchParams.get('success');
-  
+
   const [ads, setAds] = useState<Ad[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,32 +49,30 @@ export default function MyAdsPage() {
       router.push('/auth/signin?callbackUrl=/my-ads');
     }
   }, [user, isFetchingUser]);
-  
-  // Set success message based on URL parameter
+
   useEffect(() => {
     if (successParam === 'created') {
       setSuccessMessage('Your ad has been created successfully and is pending approval.');
     } else if (successParam === 'updated') {
       setSuccessMessage('Your ad has been updated successfully and is pending approval.');
     }
-    
-    // Clear success message after 5 seconds
+
     if (successMessage) {
       const timer = setTimeout(() => {
         setSuccessMessage(null);
       }, 5000);
-      
+
       return () => clearTimeout(timer);
     }
   }, [successParam, successMessage]);
-  
+
   useEffect(() => {
     fetchAds().then();
   }, [user]);
-  
+
   const getStatusBadge = (status: string) => {
     let colorClasses = '';
-    
+
     switch (status) {
       case 'approved':
         colorClasses = 'bg-green-100 text-green-800';
@@ -80,14 +86,14 @@ export default function MyAdsPage() {
       default:
         colorClasses = 'bg-gray-100 text-gray-800';
     }
-    
+
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${colorClasses}`}>
         {status.charAt(0).toUpperCase() + status.slice(1)}
       </span>
     );
   };
-  
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -95,17 +101,11 @@ export default function MyAdsPage() {
       day: 'numeric',
     });
   };
-  
-  if (isFetchingUser) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-      </div>
-    );
+
+  if (isFetchingUser || loading) {
+    return <LoadingSpinner/>;
   }
-  
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-6">
@@ -117,7 +117,7 @@ export default function MyAdsPage() {
           Post New Ad
         </Link>
       </div>
-      
+
       {successMessage && (
         <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
           <div className="flex">
@@ -132,7 +132,7 @@ export default function MyAdsPage() {
           </div>
         </div>
       )}
-      
+
       {error && (
         <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
           <div className="flex">
@@ -147,11 +147,11 @@ export default function MyAdsPage() {
           </div>
         </div>
       )}
-      
+
       {ads.length === 0 ? (
         <div className="bg-white shadow rounded-lg p-6 text-center">
-          <h2 className="text-xl font-medium text-gray-900 mb-4">You haven't posted any ads yet</h2>
-          <p className="text-gray-600 mb-6">Get started by posting your first ad. It's quick and easy!</p>
+          <h2 className="text-xl font-medium text-gray-900 mb-4">You haven&apos;t posted any ads yet</h2>
+          <p className="text-gray-600 mb-6">Get started by posting your first ad. It&apos;s quick and easy!</p>
           <Link
             href="/ads/create"
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -206,8 +206,7 @@ export default function MyAdsPage() {
                       </div>
                     </div>
                   </div>
-                  
-                  {/* Version information */}
+
                   <div className="mt-3 border-t border-gray-100 pt-3">
                     <p className="text-sm text-gray-500 mb-1">Version History:</p>
                     <div className="flex flex-wrap gap-2">
@@ -228,7 +227,6 @@ export default function MyAdsPage() {
                     </div>
                   </div>
 
-                  {/* Rejection reason */}
                   {getCurrentAdVersionFor(ad).status === 'rejected' && getCurrentAdVersionFor(ad).rejectionReason && (
                     <div className="mt-3 bg-red-50 p-2 rounded-md">
                       <p className="text-xs font-medium text-red-800">Rejection reason:</p>
@@ -242,5 +240,13 @@ export default function MyAdsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function MyAdsPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner/>}>
+      <MyAdsPageContent/>
+    </Suspense>
   );
 }

@@ -1,12 +1,10 @@
 "use client"
 
-import type {Metadata} from "next";
 import {Geist} from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import axios from "@/core/network/axios";
-import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import {User} from "@/core/interfaces/User";
 import { UserContext } from "@/core/contexts/UserContext";

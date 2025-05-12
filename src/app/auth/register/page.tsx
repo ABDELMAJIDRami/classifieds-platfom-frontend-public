@@ -9,7 +9,7 @@ export default function Register() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const {user, setUser} = useContext(UserContext);
+  const {setUser} = useContext(UserContext);
 
   const register = async (formData: FormData) => {
     setIsLoading(true);

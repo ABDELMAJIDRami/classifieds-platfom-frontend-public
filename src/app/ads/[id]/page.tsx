@@ -72,9 +72,6 @@ export default function AdViewPage() {
   }
   
   const currentVersion = getCurrentAdVersionFor(ad);
-  
-  // Placeholder images for empty images array
-  const images = [{ url: 'https://placehold.co/800x600/e2e8f0/a0aec0?text=No+Image' }];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -121,7 +118,7 @@ export default function AdViewPage() {
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Ad Version History</h2>
                 <div className="space-y-4">
                   {ad.versions && ad.versions.length > 0 ? (
-                    [...ad.versions].sort((a, b) => b.versionNumber - a.versionNumber).map((version, index) => (
+                    [...ad.versions].sort((a, b) => b.versionNumber - a.versionNumber).map((version) => (
                       <div
                         key={version.id}
                         className={`p-4 rounded-lg ${

@@ -190,7 +190,7 @@ export default function CreateAdPage() {
     }
   }, [formData.countryId, countries]);
 
-  if (isFetchingUser) {
+  if (isFetchingUser || loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-center items-center h-64">

@@ -9,7 +9,7 @@ export default function SignIn() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const {user, setUser} = useContext(UserContext);
+  const {setUser} = useContext(UserContext);
 
   const signIn = async (formData: FormData) => {
     setIsLoading(true);
